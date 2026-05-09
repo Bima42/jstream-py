@@ -42,6 +42,31 @@ async for film in parse_stream(token_stream, schema=Film):
 
 Incomplete fields receive model defaults. Extra keys are ignored by Pydantic, preserved in plain-dict mode.
 
+### With the OpenAI SDK (and OpenRouter)
+
+`delta.content` can be `None` on the first and last chunks — `jstream` skips them automatically.
+
+```python
+from openai import AsyncOpenAI
+from jstream import parse_stream
+
+client = AsyncOpenAI(base_url="https://openrouter.ai/api/v1", api_key="...")
+
+async def token_stream(response):
+    async for chunk in response:
+        yield chunk.choices[0].delta.content  # None chunks are skipped
+
+response = await client.chat.completions.create(
+    model="openai/gpt-4o-mini",
+    messages=[{"role": "user", "content": "..."}],
+    response_format={"type": "json_schema", "json_schema": {"name": "film", "strict": True, "schema": schema}},
+    stream=True,
+)
+
+async for film in parse_stream(token_stream(response), schema=Film):
+    print(film.title)
+```
+
 ## API
 
 ```python
