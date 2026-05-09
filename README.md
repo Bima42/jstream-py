@@ -11,7 +11,7 @@ Turn a raw LLM token structured output stream into validated objects as fields c
 ## Install
 
 ```bash
-pip install jstream
+pip install jstream-py
 ```
 
 ## Usage
