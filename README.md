@@ -65,6 +65,7 @@ async def parse_stream(
 | Stream closes on invalid JSON (schema provided) | Raises `JstreamValidationError`      |
 | Stream closes on invalid JSON (no schema)       | No error                             |
 | Whitespace-only chunks                          | Skipped                              |
+| `None` chunks                                   | Skipped (safe with OpenAI SDK deltas)|
 
 ## Error Handling
 
