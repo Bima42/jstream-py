@@ -1,4 +1,4 @@
-# `jstream`
+# jstream-py
 
 Turn a raw LLM token structured output stream into validated objects as fields complete.
 
@@ -44,7 +44,7 @@ Incomplete fields receive model defaults. Extra keys are ignored by Pydantic, pr
 
 ### With the OpenAI SDK (and OpenRouter)
 
-`delta.content` can be `None` on the first and last chunks — `jstream` skips them automatically.
+`delta.content` can be `None` on the first and last chunks — `jstream-py` skips them automatically.
 
 ```python
 from openai import AsyncOpenAI
@@ -82,15 +82,15 @@ async def parse_stream(
 
 ## Behavior
 
-| Situation                                       | Behavior                             |
-| ----------------------------------------------- | ------------------------------------ |
-| Chunk arrives mid-field                         | Silent — no yield until field closes |
-| Chunk produces no new completed fields          | No yield (deduplicated)              |
-| Stream closes on valid JSON                     | No error, even with schema           |
-| Stream closes on invalid JSON (schema provided) | Raises `JstreamValidationError`      |
-| Stream closes on invalid JSON (no schema)       | No error                             |
-| Whitespace-only chunks                          | Skipped                              |
-| `None` chunks                                   | Skipped (safe with OpenAI SDK deltas)|
+| Situation                                       | Behavior                              |
+| ----------------------------------------------- | ------------------------------------- |
+| Chunk arrives mid-field                         | Silent — no yield until field closes  |
+| Chunk produces no new completed fields          | No yield (deduplicated)               |
+| Stream closes on valid JSON                     | No error, even with schema            |
+| Stream closes on invalid JSON (schema provided) | Raises `JstreamValidationError`       |
+| Stream closes on invalid JSON (no schema)       | No error                              |
+| Whitespace-only chunks                          | Skipped                               |
+| `None` chunks                                   | Skipped (safe with OpenAI SDK deltas) |
 
 ## Error Handling
 
